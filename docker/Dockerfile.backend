@@ -12,7 +12,6 @@ COPY apps/backend ./apps/backend
 ENV DATABASE_URL=postgresql://postgres:mysecret@localhost:5433/postgres
 
 RUN bun install
-RUN bun run --filter=@repo/db build
 RUN bun run db:generate
 
 EXPOSE 8080
