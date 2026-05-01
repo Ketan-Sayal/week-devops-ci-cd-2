@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc -b",
-    "dev": "tsc -b && bun ./dist/src/client.js"
+    "dev": "tsc -b && bun ./src/client.ts",
+    "start":"bunx prisma migerate --name dev && bun run dev"
   },
   "devDependencies": {
     "@types/bun": "latest",
