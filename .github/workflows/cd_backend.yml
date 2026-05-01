@@ -25,9 +25,26 @@ jobs:
           tags: ketansayal2004/todo-app-backend:${{ github.sha }} # github commit id
       - name: Deploy to the VM
         run: |
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" &> ~/ssh_key
-            chmod 700 /home/runner/ssh_key
-            ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@3.90.144.148 -t "docker stop user_backend && docker run --name user_backend -d -p 8080:8080 ketansayal2004/todo-app-backend:${{ github.sha }}"
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
+
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@3.90.144.148 << 'EOF'
+          
+          # Pull latest image
+          docker pull ketansayal2004/todo-app-backend:${{ github.sha }}
+
+          # Stop old container (ignore error)
+          docker stop user_backend || true
+          docker rm user_backend || true
+
+          # Run new container with ENV
+          docker run -d \
+            --name user_backend \
+            -p 8080:8080 \
+            -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            ketansayal2004/todo-app-backend:${{ github.sha }}
+
+          EOF
       
 
       
