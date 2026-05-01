@@ -21,9 +21,6 @@
     "pg": "^8.20.0"
   },
   "exports": {
-    "./client": {
-      "types": "./src/client.ts",
-      "default": "./dist/src/client.js"
-    }
+    "./client": "./src/client.ts"
   }
 }
